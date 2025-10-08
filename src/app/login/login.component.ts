@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {Router} from "@angular/router";
 import {FormsModule} from "@angular/forms";
+import {AuthService} from "../service/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -13,19 +14,15 @@ import {FormsModule} from "@angular/forms";
 export class LoginComponent {
   email = '';
   password = '';
-  constructor(private router: Router) {}
-  onLogin() {
-    // Example: hardcoded user for demo
-    const dummyUser = { email: 'admin@example.com', password: '123456' };
+  errorMessage = '';
+  constructor(private router: Router, private authService: AuthService) {}
+  login() {
+    const success = this.authService.login(this.email, this.password);
 
-    if (this.email === dummyUser.email && this.password === dummyUser.password) {
-      // Save user data in sessionStorage
-      sessionStorage.setItem('user', JSON.stringify(dummyUser));
-
-      // Redirect to dashboard
+    if (success) {
       this.router.navigate(['/dashboard']);
     } else {
-      alert('Invalid credentials');
+      this.errorMessage = 'Invalid credentials. Please try again.';
     }
   }
 }
